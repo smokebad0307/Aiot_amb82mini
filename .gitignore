@@ -1,0 +1,16 @@
+# Local credentials
+VoiceLedController/wifi_config.h
+
+# Presentation build and validation artifacts
+.deck-build/
+.codex-finalizer/
+
+# Keep only the reviewed presentation
+output/*
+!output/AMB82_MINI_語音燈光控制_第一版_v2.pptx
+
+# Editor and generated files
+~$*
+*.tmp
+*.bin
+
