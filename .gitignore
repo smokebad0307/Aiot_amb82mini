@@ -1,5 +1,6 @@
 # Local credentials
 VoiceLedController/wifi_config.h
+https-proxy/certs/
 
 # Presentation build and validation artifacts
 .deck-build/
@@ -13,4 +14,3 @@ output/*
 ~$*
 *.tmp
 *.bin
-

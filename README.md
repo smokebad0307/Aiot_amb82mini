@@ -1,6 +1,6 @@
 # AMB82-MINI 語音控制藍燈／綠燈
 
-這個專案讓電腦或手機透過瀏覽器麥克風辨識中文指令，再以區域網路 HTTP 將白名單控制指令送至 AMB82-MINI（RTL8735B）。控制頁由開發板本身提供，不需要另外架設 Web 伺服器。
+這個專案讓電腦或手機透過瀏覽器麥克風辨識中文指令，再以區域網路將白名單控制指令送至 AMB82-MINI（RTL8735B）。開發板本身提供 HTTP 控制頁；另附一個在同 Wi-Fi 電腦上執行的 HTTPS 反向代理，讓 iPhone Safari 能在安全來源下使用麥克風。HTTPS 代理的設定方式見 [`https-proxy/README.md`](https-proxy/README.md)。
 
 ## 已實作功能
 
@@ -25,13 +25,37 @@
 
    `Open this URL: http://192.168.1.123`
 
-7. 讓電腦或手機連上相同 Wi-Fi，用瀏覽器開啟該網址，允許麥克風權限後即可操作。
+7. 讓電腦或手機連上相同 Wi-Fi。電腦可直接開啟序列監控視窗印出的 HTTP 網址；iPhone 請依下方步驟使用 HTTPS。
 
 若板子無法自動進入燒錄模式：按住 **UART_DOWNLOAD**，按一下 **RESET**，放開 RESET 後再放開 UART_DOWNLOAD，然後重新上傳。
 
+## iPhone HTTPS 使用方式
+
+AMB82-MINI 韌體提供區域網路 HTTP 頁面；iPhone 透過同一 Wi-Fi 上的 Windows 電腦 HTTPS 代理操作。電腦、iPhone 與開發板須連在相同 Wi-Fi，且使用時電腦需保持開機。
+
+第一次設定：
+
+1. 在 Windows 安裝 Node.js LTS，並確認序列監控視窗顯示的 AMB82 IP（以下以 `192.168.50.96` 為例）。
+2. 在專案資料夾開啟 PowerShell，執行：
+
+   ```powershell
+   .\https-proxy\create-cert.ps1 -BoardIp 192.168.50.96
+   ```
+
+   設定並記住伺服器憑證密碼。腳本會顯示 iPhone 要開啟的 HTTPS 網址。
+3. 將 `https-proxy\certs\ios-root.cer` 傳到 iPhone 並安裝描述檔；接著到「設定 → 一般 → 關於本機 → 憑證信任設定」，對該根憑證啟用完整信任。只在自己信任的裝置安裝此根憑證，勿分享 `server.pfx`（內含私鑰）。
+
+每次使用：
+
+1. 確認電腦、iPhone、AMB82 都在相同 Wi-Fi。
+2. 在專案資料夾 PowerShell 執行 `.\https-proxy\start.ps1`，輸入憑證密碼，並保持視窗開啟。
+3. 在 iPhone Safari 開啟憑證設定腳本顯示的 `https://<電腦 Wi-Fi IP>:8443/` 網址，允許麥克風權限。
+
+此代理只適用於可信任的區域網路，沒有登入驗證；不要將代理或開發板埠轉發到網際網路。完整說明見 [`https-proxy/README.md`](https-proxy/README.md)。
+
 ## 操作與驗收
 
-建議使用最新版 Chrome 或 Edge（Android 可用 Chrome；iPhone/iPad 可嘗試 Safari）。Web Speech API 的瀏覽器支援度並非完全一致，而且部分瀏覽器會使用線上辨識服務，因此語音辨識時可能需要網際網路。
+建議使用最新版 Chrome 或 Edge（Android 可用 Chrome；iPhone/iPad 使用 Safari，並透過 HTTPS 代理開啟）。Web Speech API 的瀏覽器支援度並非完全一致，而且部分瀏覽器會使用線上辨識服務，因此語音辨識時可能需要網際網路。
 
 | 測試 | 預期結果 |
 |---|---|
