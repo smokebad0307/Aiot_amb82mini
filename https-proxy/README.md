@@ -5,7 +5,13 @@ AMB82-MINI 的 Arduino 韌體仍透過 HTTP 在區域網路提供頁面與 API�
 ## 一次性設定
 
 1. 確認 AMB82 已連上 Wi-Fi，並從序列監控視窗確認板子 IP。下例使用 `192.168.50.96`；若板子 IP 不同，請換成實際 IP。
-2. 在 Windows 安裝 Node.js LTS，安裝後重新開啟 PowerShell。
+2. 在 Windows 安裝 Node.js LTS，安裝後重新開啟 PowerShell。若執行腳本時出現「已停用指令碼執行」，在這個 PowerShell 視窗執行以下指令，再重試腳本：
+
+   ```powershell
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+   ```
+
+   這只暫時放寬目前視窗的執行原則；關閉視窗後會還原，不會永久變更系統設定。
 3. 在專案資料夾執行：
 
    ```powershell

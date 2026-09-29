@@ -36,20 +36,29 @@ AMB82-MINI 韌體提供區域網路 HTTP 頁面；iPhone 透過同一 Wi-Fi 上�
 第一次設定：
 
 1. 在 Windows 安裝 Node.js LTS，並確認序列監控視窗顯示的 AMB82 IP（以下以 `192.168.50.96` 為例）。
-2. 在專案資料夾開啟 PowerShell，執行：
+2. 在專案資料夾開啟 PowerShell。若出現「已停用指令碼執行」錯誤，先在這個視窗執行以下指令，暫時允許本視窗執行腳本：
+
+   ```powershell
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+   ```
+
+   此設定只對目前 PowerShell 視窗有效，關閉視窗後會還原，不會永久變更系統原則。
+3. 執行憑證建立腳本：
 
    ```powershell
    .\https-proxy\create-cert.ps1 -BoardIp 192.168.50.96
    ```
 
    設定並記住伺服器憑證密碼。腳本會顯示 iPhone 要開啟的 HTTPS 網址。
-3. 將 `https-proxy\certs\ios-root.cer` 傳到 iPhone 並安裝描述檔；接著到「設定 → 一般 → 關於本機 → 憑證信任設定」，對該根憑證啟用完整信任。只在自己信任的裝置安裝此根憑證，勿分享 `server.pfx`（內含私鑰）。
+4. 將 `https-proxy\certs\ios-root.cer` 傳到 iPhone 並安裝描述檔；接著到「設定 → 一般 → 關於本機 → 憑證信任設定」，對該根憑證啟用完整信任。只在自己信任的裝置安裝此根憑證，勿分享 `server.pfx`（內含私鑰）。
 
 每次使用：
 
 1. 確認電腦、iPhone、AMB82 都在相同 Wi-Fi。
 2. 在專案資料夾 PowerShell 執行 `.\https-proxy\start.ps1`，輸入憑證密碼，並保持視窗開啟。
 3. 在 iPhone Safari 開啟憑證設定腳本顯示的 `https://<電腦 Wi-Fi IP>:8443/` 網址，允許麥克風權限。
+
+若日後在新的 PowerShell 視窗執行 `start.ps1` 時也遇到腳本執行遭封鎖，請在該視窗重新執行上述 `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force`；此設定只維持到該視窗關閉。
 
 此代理只適用於可信任的區域網路，沒有登入驗證；不要將代理或開發板埠轉發到網際網路。完整說明見 [`https-proxy/README.md`](https-proxy/README.md)。
 
