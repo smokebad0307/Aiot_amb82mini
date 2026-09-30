@@ -52,6 +52,20 @@ AMB82-MINI 韌體提供區域網路 HTTP 頁面；iPhone 透過同一 Wi-Fi 上�
    設定並記住伺服器憑證密碼。腳本會顯示 iPhone 要開啟的 HTTPS 網址。
 4. 將 `https-proxy\certs\ios-root.cer` 傳到 iPhone 並安裝描述檔；接著到「設定 → 一般 → 關於本機 → 憑證信任設定」，對該根憑證啟用完整信任。只在自己信任的裝置安裝此根憑證，勿分享 `server.pfx`（內含私鑰）。
 
+### Windows 桌面版 Chrome 信任憑證
+
+若要在 Windows 桌面版 Chrome 開啟此 HTTPS 網址，也要讓 Windows 信任本專案產生的根憑證：
+
+1. 在檔案總管找到 `https-proxy\certs\ios-root.cer`，按右鍵選「安裝憑證」。
+2. 選「目前使用者」，再選「將所有憑證放入以下存放區」→「受信任的根憑證授權單位」，完成匯入。
+3. 關閉並重新開啟 Chrome，再前往代理顯示的 HTTPS 網址。
+
+這會讓目前 Windows 使用者信任由此根憑證簽發的網站憑證；只匯入自己剛產生的憑證，不要信任陌生來源的根憑證。Chrome 在 Windows 會使用作業系統提供的自訂根憑證。[Chrome 憑證說明](https://support.google.com/chrome/answer/95617)
+
+在 Chrome 網址列左側的網站資訊圖示中，打開「網站設定」，將「麥克風」設為「允許」，再重新載入頁面。也可到 `chrome://settings/content/microphone` 檢查是否曾封鎖此網站。[Chrome 麥克風權限說明](https://support.google.com/chrome/answer/2693767)
+
+若使用 iPhone 上的 Chrome，請依前面的 iPhone 步驟安裝並信任憑證；不要在 Windows 匯入。iPhone 上手動安裝的根憑證需在 iOS「憑證信任設定」啟用完整信任。[Apple 憑證信任說明](https://support.apple.com/zh-cn/102390)
+
 每次使用：
 
 1. 確認電腦、iPhone、AMB82 都在相同 Wi-Fi。
